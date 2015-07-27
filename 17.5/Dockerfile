@@ -1,5 +1,7 @@
 FROM debian:jessie
-MAINTAINER Steve Domin <steve@stevedomin.com>
+MAINTAINER Ofer Affias
+
+ENV REBAR_VERSION beta-1
 
 RUN apt-get update && apt-get install -y wget
 
@@ -16,5 +18,13 @@ RUN apt-get update && apt-get install -y \
   erlang-runtime-tools=1:17.5.3 erlang-snmp=1:17.5.3 erlang-ssh=1:17.5.3 erlang-ssl=1:17.5.3 erlang-syntax-tools=1:17.5.3 \
   erlang-test-server=1:17.5.3 erlang-toolbar=1:17.5.3 erlang-tools=1:17.5.3 erlang-tv=1:17.5.3 erlang-typer=1:17.5.3 \
   erlang-webtool=1:17.5.3 erlang-wx=1:17.5.3 erlang-xmerl=1:17.5.3 erlang-diameter=1:17.5.3 erlang-eldap=1:17.5.3
+
+ADD https://github.com/rebar/rebar3/archive/${REBAR_VERSION}.tar.gz  /usr/src/rebar3-${REBAR_VERSION}.tar.gz
+RUN cd /usr/src \
+    && tar zxf rebar3-${REBAR_VERSION}.tar.gz \
+    && cd rebar3-${REBAR_VERSION} \
+    && escript bootstrap \
+    && cp rebar3 /usr/bin/rebar3 \
+    && cd / && rm -rf /usr/src/rebar3-${REBAR_VERSION}*
 
 CMD ["erl"]
